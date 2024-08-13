@@ -2,11 +2,15 @@
 
 namespace App\Http\Controllers;
 
+
 use Illuminate\Http\Request;
 use Illuminate\Foundation\Auth\User;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Hash;
+use Intervention\Image\ImageManager;
 use Illuminate\Support\Facades\Validator;
+use Intervention\Image\Drivers\Gd\Driver;
 
 class AccountController extends Controller
 {
@@ -47,7 +51,6 @@ class AccountController extends Controller
                 'status' => true,
                 'errors' => []
             ]);
-            
         } else {
             return response()->json([
                 'status' => false,
@@ -91,11 +94,15 @@ class AccountController extends Controller
 
     public function profile()
     {
-        $id=Auth::user()->id;
-        $user =User::findOrFail($id);
+        $id = Auth::user()->id; //To get the user id 
+        $user = User::findOrFail($id); //To get the user information from  id
         // dd($user);
-     
-        return view('front.account.profile',[
+
+
+
+        // Now passing the user to the page 
+
+        return view('front.account.profile', [
             'user' => $user
         ]);
     }
@@ -104,5 +111,97 @@ class AccountController extends Controller
     {
         Auth::logout();
         return redirect()->route('account.login');
+    }
+
+    public function updateProfile(Request $request)
+    {
+        $id = Auth::user()->id; //To get the user id 
+
+        $rules = [
+            'name' => 'required|min:5|max:20',
+            'email' => 'required|email|unique:users,email,' . $id . ',id',
+            'designation' => 'required',
+            'mobile' => 'required|max:10',
+        ];
+
+
+        $Validator = Validator::make($request->all(), $rules);
+
+        if ($Validator->passes()) {
+
+            $user = User::findOrFail($id);
+            $user->name = $request->name;
+            $user->email = $request->email;
+            $user->designation = $request->designation;
+            $user->mobile = $request->mobile;
+            $user->save();
+
+            session()->flash('success', "The Profile is Updated Successfully");
+
+
+            return response()->json([
+                'status' => true,
+                'errors' => []
+            ]);
+        } else {
+            return response()->json([
+                'status' => false,
+                'errors' => $Validator->errors()
+            ]);
+        }
+    }
+
+    public function updateProfilePic(Request $request)
+    {
+        // dd($request->all());
+
+        $id = Auth::user()->id;
+
+        $Validator = Validator::make($request->all(), [
+            'image' => 'required|image'
+        ]);
+
+        if ($Validator->passes()) {
+
+            $image = $request->image;
+            $ext = $image->getClientOriginalExtension();
+            $imageName = $id . '-' . time() . '.' . $ext;
+
+            $image->move(public_path('/profile_pic/'), $imageName);
+
+            User::where('id', $id)->update(['image' => $imageName]);
+
+            // create a small thumbnail 
+            // create new image instance (800 x 600)
+            $source_path = public_path('/profile_pic/'. $imageName);
+            $manager = new ImageManager(Driver::class);
+            $image = $manager->read($source_path);
+
+            // crop the best fitting 5:3 (600x360) ratio and resize to 600x360 pixel
+            $image->cover(150, 150);
+            $image->toPng()->save(public_path('/profile_pic/thumb/'. $imageName));
+
+
+            // Deleting the old profile pic 
+            File::delete(public_path('/profile_pic/thumb/'. Auth::user()->image));
+            File::delete(public_path('/profile_pic/'. Auth::user()->image));
+
+
+
+            session()->flash('success', "Profile Picture Uploaded");
+
+
+
+            return response()->json([
+                'status' => true,
+                'errors' => []
+
+            ]);
+        } else {
+            return response()->json([
+                'status' => false,
+                'errors' => $Validator->errors()
+            ]);
+        }
     }
 }

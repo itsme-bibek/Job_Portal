@@ -6,6 +6,9 @@
             <div class="py-lg-2">&nbsp;</div>
             <div class="row d-flex justify-content-center">
                 <div class="col-md-5">
+
+                
+
                     <div class="card shadow border-0 p-5">
                         <h1 class="h3">Register</h1>
                         <form action="" name="registrationForm" id="registrationForm">
@@ -77,7 +80,6 @@
                                 .html('')
 
                         }
-
 
                         if (error.email) {
                             $('#email')

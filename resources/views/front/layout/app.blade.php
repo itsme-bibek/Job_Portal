@@ -9,7 +9,7 @@
         content="width=device-width, initial-scale=1, shrink-to-fit=no, maximum-scale=1, user-scalable=no" />
     <meta name="HandheldFriendly" content="True" />
     <meta name="pinterest" content="nopin" />
-    <meta name="csrf-token" content="{{csrf_token()}}" />
+    <meta name="csrf-token" content="{{ csrf_token() }}" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css" />
 
     <link rel="stylesheet" type="text/css" href="{{ asset('assets/css/style.css') }}" />
@@ -36,11 +36,12 @@
                             <a class="nav-link" aria-current="page" href="jobs.html">Find Jobs</a>
                         </li>
                     </ul>
-                    @if (!Auth::check())      
-                    <a class="btn btn-outline-primary me-2" href="{{ route('account.login') }}" type="submit">Login</a>
+                    @if (!Auth::check())
+                        <a class="btn btn-outline-primary me-2" href="{{ route('account.login') }}"
+                            type="submit">Login</a>
                     @else
-                    <a class="btn btn-outline-primary me-2" href="{{ route('account.profile') }}" type="submit">My Account</a>
-
+                        <a class="btn btn-outline-primary me-2" href="{{ route('account.profile') }}" type="submit">My
+                            Account</a>
                     @endif
                     <a class="btn btn-primary" href="post-job.html" type="submit">Post a Job</a>
                 </div>
@@ -50,6 +51,8 @@
 
 
     @yield('main')
+
+
     <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
@@ -58,10 +61,11 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <form>
+                    <form name="profilePicForm" action="" method="post" id="profilePicForm">
                         <div class="mb-3">
                             <label for="exampleInputEmail1" class="form-label">Profile Image</label>
                             <input type="file" class="form-control" id="image" name="image">
+                            <p class="text-danger" id="image-error"></p>
                         </div>
                         <div class="d-flex justify-content-end">
                             <button type="submit" class="btn btn-primary mx-3">Update</button>
@@ -93,6 +97,38 @@
             headers: {
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
             }
+        });
+
+        $("#profilePicForm").submit(function(e) {
+            e.preventDefault();
+
+            var formData = new FormData(this);
+
+            $.ajax({
+                url: '{{ route('account.updateProfilePic') }}',
+                type: 'post',
+                dataType: 'json',
+                data: formData,
+                contentType: false,
+                processData: false,
+                success: function(response) {
+
+                    if (response.status == false) {
+                        var errors = response.errors;
+                        if(errors.image){
+                            $("#image-error").html(errors.image)
+
+                        }
+
+
+                    } else {
+                        window.location.href= '{{ url()->current() }}';
+
+                    }
+
+                }
+            })
+
         });
     </script>
 
