@@ -43,120 +43,61 @@
                                         </tr>
                                     </thead>
                                     <tbody class="border-0">
+                                        @if ($jobs->isNotEmpty())
+
+                                        @foreach ($jobs as $job)
                                         <tr class="active">
                                             <td>
-                                                <div class="job-name fw-500">Web Developer</div>
-                                                <div class="info1">Fulltime . Noida</div>
+                                                <div class="job-name fw-500">{{ $job->title }}</div>
+                                                <div class="info1">Fulltime . {{ $job->location }}</div>
                                             </td>
-                                            <td>05 Jun, 2023</td>
+                                            <td>{{ \Carbon\Carbon::parse($job->create_at)->format('d M, Y ') }}</td>
                                             <td>130 Applications</td>
                                             <td>
+                                                @if ($job->status == 1)
                                                 <div class="job-status text-capitalize">active</div>
+                                                @else
+                                                
+                                                <div class="job-status text-capitalize">Block </div>
+
+                                                    
+                                                @endif
+                                                
                                             </td>
                                             <td>
                                                 <div class="action-dots float-end">
-                                                    <a href="#" class="" data-bs-toggle="dropdown"
+                                                    <button href="#" class="btn" data-bs-toggle="dropdown"
                                                         aria-expanded="false">
                                                         <i class="fa fa-ellipsis-v" aria-hidden="true"></i>
-                                                    </a>
+                                                    </button>
                                                     <ul class="dropdown-menu dropdown-menu-end">
                                                         <li><a class="dropdown-item" href="job-detail.html"> <i
                                                                     class="fa fa-eye" aria-hidden="true"></i> View</a></li>
-                                                        <li><a class="dropdown-item" href="#"><i class="fa fa-edit"
+                                                        <li><a class="dropdown-item" href="{{ route('account.editJobs',$job->id) }}"><i class="fa fa-edit"
                                                                     aria-hidden="true"></i> Edit</a></li>
-                                                        <li><a class="dropdown-item" href="#"><i class="fa fa-trash"
-                                                                    aria-hidden="true"></i> Remove</a></li>
+                                                        <li><a class="dropdown-item" href="#" onclick="deleteJob({{ $job->id }})"><i class="fa fa-trash"
+                                                                    aria-hidden="true"></i> Delete</a></li>
                                                     </ul>
                                                 </div>
                                             </td>
                                         </tr>
-                                        <tr class="pending">
-                                            <td>
-                                                <div class="job-name fw-500".html Developer</div>
-                                                    <div class="info1">Part-time . Delhi</div>
-                                            </td>
-                                            <td>13 Aug, 2023</td>
-                                            <td>20 Applications</td>
-                                            <td>
-                                                <div class="job-status text-capitalize">pending</div>
-                                            </td>
-                                            <td>
-                                                <div class="action-dots float-end">
-                                                    <a href="#" class="" data-bs-toggle="dropdown"
-                                                        aria-expanded="false">
-                                                        <i class="fa fa-ellipsis-v" aria-hidden="true"></i>
-                                                    </a>
-                                                    <ul class="dropdown-menu dropdown-menu-end">
-                                                        <li><a class="dropdown-item" href="job-detail.html"> <i
-                                                                    class="fa fa-eye" aria-hidden="true"></i> View</a></li>
-                                                        <li><a class="dropdown-item" href="#"><i class="fa fa-edit"
-                                                                    aria-hidden="true"></i> Edit</a></li>
-                                                        <li><a class="dropdown-item" href="#"><i class="fa fa-trash"
-                                                                    aria-hidden="true"></i> Remove</a></li>
-                                                    </ul>
-                                                </div>
-                                            </td>
-                                        </tr>
-                                        <tr class="expired">
-                                            <td>
-                                                <div class="job-name fw-500">Full Stack Developer</div>
-                                                <div class="info1">Fulltime . Noida</div>
-                                            </td>
-                                            <td>27 Sep, 2023</td>
-                                            <td>278 Applications</td>
-                                            <td>
-                                                <div class="job-status text-capitalize">expired</div>
-                                            </td>
-                                            <td>
-                                                <div class="action-dots float-end">
-                                                    <a href="#" class="" data-bs-toggle="dropdown"
-                                                        aria-expanded="false">
-                                                        <i class="fa fa-ellipsis-v" aria-hidden="true"></i>
-                                                    </a>
-                                                    <ul class="dropdown-menu dropdown-menu-end">
-                                                        <li><a class="dropdown-item" href="job-detail.html"> <i
-                                                                    class="fa fa-eye" aria-hidden="true"></i> View</a></li>
-                                                        <li><a class="dropdown-item" href="#"><i class="fa fa-edit"
-                                                                    aria-hidden="true"></i> Edit</a></li>
-                                                        <li><a class="dropdown-item" href="#"><i class="fa fa-trash"
-                                                                    aria-hidden="true"></i> Remove</a></li>
-                                                    </ul>
-                                                </div>
-                                            </td>
-                                        </tr>
-                                        <tr class="active">
-                                            <td>
-                                                <div class="job-name fw-500">Developer for IT company</div>
-                                                <div class="info1">Fulltime . Goa</div>
-                                            </td>
-                                            <td>14 Feb, 2023</td>
-                                            <td>70 Applications</td>
-                                            <td>
-                                                <div class="job-status text-capitalize">active</div>
-                                            </td>
-                                            <td>
-                                                <div class="action-dots float-end">
-                                                    <a href="#" class="" data-bs-toggle="dropdown"
-                                                        aria-expanded="false">
-                                                        <i class="fa fa-ellipsis-v" aria-hidden="true"></i>
-                                                    </a>
-                                                    <ul class="dropdown-menu dropdown-menu-end">
-                                                        <li><a class="dropdown-item" href="job-detail.html"> <i
-                                                                    class="fa fa-eye" aria-hidden="true"></i> View</a>
-                                                        </li>
-                                                        <li><a class="dropdown-item" href="#"><i class="fa fa-edit"
-                                                                    aria-hidden="true"></i> Edit</a></li>
-                                                        <li><a class="dropdown-item" href="#"><i
-                                                                    class="fa fa-trash" aria-hidden="true"></i> Remove</a>
-                                                        </li>
-                                                    </ul>
-                                                </div>
-                                            </td>
-                                        </tr>
+
+                                            
+                                        @endforeach
+                                            
+                                        @endif
+
+
+                                       
+                                       
                                     </tbody>
 
                                 </table>
                             </div>
+                            <div>
+                                {{ $jobs->links('pagination::bootstrap-5') }}
+                            </div>
+                            
                         </div>
                     </div>
 
@@ -167,143 +108,23 @@
 @endsection
 
 @section('customJs')
-    {{-- <script type="text/javascript">
-        $("#createJobForm").submit(function(e) {
-            e.preventDefault();
-            // console.log($("#createJobForm").serializeArray())
-            // return false;
+<script type="text/javascript">
+ function deleteJob(jobId){   //Receive the id number from the delete button
+    if(confirm("Are you sure you want to delete Job?")){
+        $.ajax({
+            url: '{{ route("account.deleteJobs") }}',
+            type: 'post',
+            data: {jobId: jobId}, //passing the id
+            dataType: 'json',
+            success: function(response){
+                window.location.href= '{{ route("account.myJob") }}';
+            }
+    });
 
-            $.ajax({
-                url: '{{ route('account.saveJobs') }}',
-                type: 'POST',
-                dataType: 'json',
-                data: $("#createJobForm").serializeArray(),
-                success: function(response) { // From the json response whether we get true or false
-                    if (response.status == true) {
+    }
 
-                        $('#title').removeClass('is-invalid')
-                            .siblings('p')
-                            .removeClass('invalid-feedback')
-                            .html('');
+ }
 
-                        $('#category').removeClass('is-invalid')
-                            .siblings('p')
-                            .removeClass('invalid-feedback')
-                            .html('');
-
-                        $('#jobType').removeClass('is-invalid')
-                            .siblings('p')
-                            .removeClass('invalid-feedback')
-                            .html('');
-
-                        $('#vacancy').removeClass('is-invalid')
-                            .siblings('p')
-                            .removeClass('invalid-feedback')
-                            .html('');
-                        $('#location').removeClass('is-invalid')
-                            .siblings('p')
-                            .removeClass('invalid-feedback')
-                            .html('');
-                        $('#description').removeClass('is-invalid')
-                            .siblings('p')
-                            .removeClass('invalid-feedback')
-                            .html('');
-                        $('#company_name').removeClass('is-invalid')
-                            .siblings('p')
-                            .removeClass('invalid-feedback')
-                            .html('');
-
-                        window.location.href = '{{ route('account.myJob') }}';
-
-
-                    } else {
-                        var errors = response.errors;
-
-                        if (errors.title) {
-                            $("#title").addClass('is-invalid')
-                                .siblings('p')
-                                .addClass('invalid-feedback')
-                                .html(errors.title)
-                        } else {
-                            $("#title").removeClass('is-invalid')
-                                .siblings('p')
-                                .removeClass('invalid-feedback')
-                                .html('')
-                        }
-
-                        if (errors.category) {
-                            $("#category").addClass('is-invalid')
-                                .siblings('p')
-                                .addClass('invalid-feedback')
-                                .html(errors.category)
-                        } else {
-                            $("#category").removeClass('is-invalid')
-                                .siblings('p')
-                                .removeClass('invalid-feedback')
-                                .html('')
-                        }
-
-                        if (errors.jobType) {
-                            $("#jobType").addClass('is-invalid')
-                                .siblings('p')
-                                .addClass('invalid-feedback')
-                                .html(errors.jobType)
-                        } else {
-                            $("#jobType").removeClass('is-invalid')
-                                .siblings('p')
-                                .removeClass('invalid-feedback')
-                                .html('')
-                        }
-
-                        if (errors.vacancy) {
-                            $("#vacancy").addClass('is-invalid')
-                                .siblings('p')
-                                .addClass('invalid-feedback')
-                                .html(errors.vacancy)
-                        } else {
-                            $("#vacancy").removeClass('is-invalid')
-                                .siblings('p')
-                                .removeClass('invalid-feedback')
-                                .html('')
-                        }
-                        if (errors.location) {
-                            $("#location").addClass('is-invalid')
-                                .siblings('p')
-                                .addClass('invalid-feedback')
-                                .html(errors.location)
-                        } else {
-                            $("#location").removeClass('is-invalid')
-                                .siblings('p')
-                                .removeClass('invalid-feedback')
-                                .html('')
-                        }
-                        if (errors.description) {
-                            $("#description").addClass('is-invalid')
-                                .siblings('p')
-                                .addClass('invalid-feedback')
-                                .html(errors.description)
-                        } else {
-                            $("#description").removeClass('is-invalid')
-                                .siblings('p')
-                                .removeClass('invalid-feedback')
-                                .html('')
-                        }
-                        if (errors.company_name) {
-                            $("#company_name").addClass('is-invalid')
-                                .siblings('p')
-                                .addClass('invalid-feedback')
-                                .html(errors.company_name)
-                        } else {
-                            $("#company_name").removeClass('is-invalid')
-                                .siblings('p')
-                                .removeClass('invalid-feedback')
-                                .html('')
-                        }
-                    }
-
-                }
-            });
-
-        });
-    </script> --}}
+</script>
+   
 @endsection

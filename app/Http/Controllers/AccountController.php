@@ -208,6 +208,8 @@ class AccountController extends Controller
     }
 
     public function createJob(){
+        // To fetch the data from the database using model
+        // and send it to next page 
 
         $categories=Category::orderBy('name','ASC')->where('status',1)->get();
         $jobTypes=job_types::orderby('name','ASC')->where('status',1)->get();
@@ -235,6 +237,7 @@ class AccountController extends Controller
         if($validator->passes()){
             $job = new Job();
             $job ->title = $request->title;
+            $job->user_id = Auth::user()->id;
             $job ->category_id  = $request->category;
             $job ->job_types_id  = $request->jobType;
             $job ->vacancy = $request->vacancy;
@@ -269,6 +272,123 @@ class AccountController extends Controller
     }
 
     public function myJob(){
-        return view('front.account.job.myjob');
+
+        $jobs = Job::where('user_id',Auth::user()->id)->with('jobType')->orderBy('created_at','DESC')->paginate(5);
+        // dd($jobs);
+        
+        return view('front.account.job.myjob',[
+            'jobs' => $jobs
+        ]);
+    }
+
+    public function editjob(Request $request, $id){
+        $categories=Category::orderBy('name','ASC')->where('status',1)->get();
+        $jobTypes=job_types::orderby('name','ASC')->where('status',1)->get();
+
+        $job =Job::where([
+            'user_id' => Auth::user()->id,
+            'id' => $id
+        ])->first();
+
+        if($job == null){
+            abort(404);
+        }
+
+        
+
+
+        return view('front.account.job.editjob',[
+            'categories' => $categories,
+            'jobType' => $jobTypes,
+            'jobs' => $job
+        ]);
+    }
+
+    public function updateJobs(Request $request,$id){
+
+        $validator=Validator::make($request->all(),[
+            'title' => 'required|min:3|max:200',
+            'category' => 'required',
+            'jobType' => 'required',
+            'vacancy' => 'required|integer',
+            'location' => 'required|max:50',
+            'description' => 'required',
+            'experience' => 'required',
+            'company_name' => 'required|min:3|max:50'
+
+
+        ]);
+
+        if($validator->passes()){
+            $job =  Job::findOrFail($id);
+            $job ->title = $request->title;
+            $job->user_id = Auth::user()->id;
+            $job ->category_id  = $request->category;
+            $job ->job_types_id  = $request->jobType;
+            $job ->vacancy = $request->vacancy;
+            $job ->salary = $request->salary;
+            $job ->location = $request->location;
+            $job ->description = $request->description;
+            $job ->benefit = $request->benefits;
+            $job ->responsibility = $request->responsibility;
+            $job ->qualification = $request->qualifications;
+            $job ->experience = $request->experience;
+            $job ->keywords = $request->keywords;
+            $job ->company_name = $request->company_name;
+            $job ->company_location = $request->company_location;
+            $job ->company_website = $request->company_website;
+            $job->save();
+
+            session()->flash('success' ,"Job Updated Successfully");
+
+
+            return response()->json([
+                'status' =>true,
+                'errors' => []
+            ]);
+
+        }
+        else{
+            
+            return response()->json([
+                'status' =>false,
+                'errors' => $validator->errors()
+            ]);
+
+        }
+
+
+
+    }
+
+    public function deleteJob(Request $request){
+
+        $jobs =Job::where([
+            'user_id' => Auth::user()->id,
+            'id'=> $request->jobId
+
+        ])->first();
+
+        if($jobs == null){
+            session()->flash('error', "Either the job is deleted or not found");
+
+            return response()->json([
+                'status'=> true
+            
+
+            ]);
+        }
+
+        Job::where('id',$request->jobId)->delete();
+        session()->flash('success', "Job is deleted Successfully");
+
+        return response()->json([
+            'status'=> true
+        
+
+        ]);
+
+    
+
     }
 }
