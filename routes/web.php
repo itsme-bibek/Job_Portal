@@ -7,6 +7,7 @@ use App\Http\Controllers\JobsController;
 
 Route::get('/',[HomeController::class, 'index'])->name('home');
 Route::get('/jobs',[JobsController::class, 'index'])->name('jobs');
+Route::get('/jobs/details/{id}',[JobsController::class, 'details'])->name('details');
 
 // Now creating the middleware 
 Route::group(['prefix'=>'account'],function(){

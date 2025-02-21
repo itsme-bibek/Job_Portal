@@ -41,6 +41,7 @@ class JobsController extends Controller
         }
 
         // search using jobtype 
+        $jobTypeArray=[];
         if(!empty($request->job_type)){
             $jobTypeArray=explode(',',$request->job_type);
             $mainjobs = $mainjobs->whereIn('job_types_id', $jobTypeArray);
@@ -51,15 +52,48 @@ class JobsController extends Controller
             $mainjobs=$mainjobs->where('experience',$request->experience);
         }
 
+        $mainjobs= $mainjobs->with(['Category','jobType']);
 
-        $mainjobs= $mainjobs->with('Category')->orderBy('created_at','DESC')->paginate(9);
+        if($request->sort == 0){
+            $mainjobs = $mainjobs->orderBy('created_at','ASC');
+
+        }else
+        {
+         $mainjobs = $mainjobs->orderBy('created_at','DESC');
+
+        }
+
+       
+
+        $mainjobs = $mainjobs->paginate(9);
 
 
         return view ('front.jobs',[
             'categories'=> $categories,
             'jobs'=>$jobs,
-            'mainjobs'=> $mainjobs
+            'mainjobs'=> $mainjobs,
+            'jobTypeArray' => $jobTypeArray
         ]);
 
     }
+
+
+    public function details($id){
+        
+        $job =Job::where(['id'=> $id,
+        'status' => 1
+        
+    ])->with(['jobType','Category'])->first();
+
+    if($job == null){
+        abort(404);
+    }
+  
+
+    return view('front.jobDetails',[
+        'job' => $job
+    ]);
+
+    }
+
 }

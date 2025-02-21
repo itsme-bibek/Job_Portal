@@ -100,8 +100,6 @@ class AccountController extends Controller
         $user = User::findOrFail($id); //To get the user information from  id
         // dd($user);
 
-
-
         // Now passing the user to the page 
 
         return view('front.account.profile', [

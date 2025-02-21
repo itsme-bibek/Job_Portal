@@ -10,10 +10,10 @@ class Job extends Model
     use HasFactory;
 
     public function jobType(){
-        return $this->belongsTo(job_types::class);
+        return $this->belongsTo(job_types::class, 'job_types_id');
     }
 
     public function Category(){
-        return $this->belongsTo(Category::class);
+        return $this->belongsTo(Category::class, 'category_id');
     }
 }

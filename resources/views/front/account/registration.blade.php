@@ -11,6 +11,8 @@
 
                     <div class="card shadow border-0 p-5">
                         <h1 class="h3">Register</h1>
+
+
                         <form action="" name="registrationForm" id="registrationForm">
                             @csrf
                             <div class="mb-3">
@@ -37,7 +39,7 @@
                                     placeholder="Confirm Password">
                                 <p></p>
                             </div>
-                            <button class="btn btn-primary mt-2">Register</button>
+                            <button type="submit" class="btn btn-primary mt-2">Register</button>
                         </form>
                     </div>
                     <div class="mt-4 text-center">

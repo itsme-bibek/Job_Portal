@@ -49,7 +49,7 @@
                                         <tr class="active">
                                             <td>
                                                 <div class="job-name fw-500">{{ $job->title }}</div>
-                                                <div class="info1">Fulltime . {{ $job->location }}</div>
+                                                <div class="info1">{{ $job->jobType->name }}. {{ $job->location }}</div>
                                             </td>
                                             <td>{{ \Carbon\Carbon::parse($job->create_at)->format('d M, Y ') }}</td>
                                             <td>130 Applications</td>
